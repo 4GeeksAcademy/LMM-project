@@ -59,6 +59,18 @@ def handle_personajes():
 
 
 
+@app.route('/personaje/<int:personaje_id>', methods=['GET'])
+def handle_personajes_id(personaje_id):
+
+    onepersonaje = Personajes.query.filter_by(id=personaje_id).first()
+
+    if onepersonaje is None:
+        return { 'msj' : 'El personaje no existe, verifica el ID de la URL'}, 404
+
+    return jsonify(onepersonaje.serialize()), 200
+
+
+
 @app.route('/personaje', methods=['POST'])
 def create_personaje():
     request_body = json.loads(request.data)
@@ -95,18 +107,6 @@ def delete_personaje(personaje_id):
         return jsonify({"message": "El personaje ha sido eliminado"}), 200
 
     return jsonify({"message": "El personaje que intenta eliminar no existe"}), 404
-
-
-
-@app.route('/personaje/<int:personaje_id>', methods=['GET'])
-def handle_personajes_id(personaje_id):
-
-    onepersonaje = Personajes.query.filter_by(id=personaje_id).first()
-
-    if onepersonaje is None:
-        return { 'msj' : 'El personaje no existe, verifica el ID de la URL'}, 404
-
-    return jsonify(onepersonaje.serialize()), 200
 
 
 
@@ -174,7 +174,19 @@ def handle_planetas():
 
 
 
-@app.route('/planetas', methods=['POST'])
+@app.route('/planeta/<int:planeta_id>', methods=['GET'])
+def handle_planeta_id(planeta_id):
+
+    oneplaneta = Planetas.query.filter_by(id=planeta_id).first()
+
+    if oneplaneta is None:
+        return { 'msj' : 'El planeta no existe'}, 404
+
+    return jsonify(oneplaneta.serialize()), 200
+
+
+
+@app.route('/planeta', methods=['POST'])
 def create_planeta():
     request_body = json.loads(request.data)
 
@@ -200,19 +212,7 @@ def create_planeta():
 
 
 
-@app.route('/planeta/<int:planeta_id>', methods=['GET'])
-def handle_planeta_id(planeta_id):
-
-    oneplaneta = Planetas.query.filter_by(id=planeta_id).first()
-
-    if oneplaneta is None:
-        return { 'msj' : 'El planeta no existe'}, 404
-
-    return jsonify(oneplaneta.serialize()), 200
-
-
-
-@app.route('/planetas/<int:planeta_id>', methods=['DELETE'])
+@app.route('/planeta/<int:planeta_id>', methods=['DELETE'])
 def delete_planeta(planeta_id):
 
     existing_planeta = Planetas.query.filter_by(id=planeta_id).first()
@@ -290,7 +290,19 @@ def handle_vehiculos():
 
 
 
-@app.route('/vehiculos', methods=['POST'])
+@app.route('/vehiculo/<int:vehiculo_id>', methods=['GET'])
+def handle_vehiculo_id(vehiculo_id):
+
+    onevehiculo = Vehiculos.query.filter_by(id=vehiculo_id).first()
+
+    if onevehiculo is None:
+        return { 'msj' : 'El vehiculo no existe'}, 404
+
+    return jsonify(onevehiculo.serialize()), 200
+
+
+
+@app.route('/vehiculo', methods=['POST'])
 def create_vehiculo():
     request_body = json.loads(request.data)
 
@@ -320,19 +332,7 @@ def create_vehiculo():
 
 
 
-@app.route('/vehiculo/<int:vehiculo_id>', methods=['GET'])
-def handle_vehiculo_id(vehiculo_id):
-
-    onevehiculo = Vehiculos.query.filter_by(id=vehiculo_id).first()
-
-    if onevehiculo is None:
-        return { 'msj' : 'El vehiculo no existe'}, 404
-
-    return jsonify(onevehiculo.serialize()), 200
-
-
-
-@app.route('/vehiculos/<int:vehiculo_id>', methods=['DELETE'])
+@app.route('/vehiculo/<int:vehiculo_id>', methods=['DELETE'])
 def delete_vehiculo(vehiculo_id):
 
     existing_vehiculo = Vehiculos.query.filter_by(id=vehiculo_id).first()
