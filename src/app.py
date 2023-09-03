@@ -58,19 +58,6 @@ def handle_personajes():
     return jsonify(personajesList), 200
 
 
-
-@app.route('/personaje/<int:personaje_id>', methods=['GET'])
-def handle_personajes_id(personaje_id):
-
-    onepersonaje = Personajes.query.filter_by(id=personaje_id).first()
-
-    if onepersonaje is None:
-        return { 'msj' : 'El personaje no existe, verifica el ID de la URL'}, 404
-
-    return jsonify(onepersonaje.serialize()), 200
-
-
-
 @app.route('/personajes', methods=['POST'])
 def create_personaje():
     request_body = json.loads(request.data)
@@ -92,8 +79,19 @@ def create_personaje():
         )
     db.session.add(new_personaje)
     db.session.commit()
-    
     return jsonify(new_personaje.serialize()), 200
+
+
+@app.route('/personaje/<int:personaje_id>', methods=['GET'])
+def handle_personajes_id(personaje_id):
+
+    onepersonaje = Personajes.query.filter_by(id=personaje_id).first()
+
+    if onepersonaje is None:
+        return { 'msj' : 'El personaje no existe, verifica el ID de la URL'}, 404
+
+    return jsonify(onepersonaje.serialize()), 200
+
 
 
 
@@ -159,6 +157,30 @@ def handle_planetas():
 
     return jsonify(planetasList), 200
 
+
+@app.route('/planetas', methods=['POST'])
+def create_planeta():
+    request_body = json.loads(request.data)
+
+    existing_planeta = Planetas.query.filter_by(name=request_body["name"]).first()
+
+    if existing_planeta:
+        return jsonify({"message": "El planeta ya existe"}), 404
+
+    new_planeta = Planetas(
+        name=request_body['name'],
+        diameter=request_body['diameter'],
+        rotation_period=request_body['rotation_period'],
+        orbital_period=request_body['orbital_period'],
+        gravity=request_body['gravity'],
+        population=request_body['population'],
+        climate=request_body['climate'],
+        terrain=request_body['terrain'],
+        surface_water=request_body['surface_water']
+        )
+    db.session.add(new_planeta)
+    db.session.commit()
+    return jsonify(new_planeta.serialize()), 200
 
 
 @app.route('/planeta/<int:planeta_id>', methods=['GET'])
@@ -233,6 +255,35 @@ def handle_vehiculos():
         return { 'msj' : 'no hay vehiculos'}, 404
 
     return jsonify(vehiculosList), 200
+
+
+@app.route('/vehiculos', methods=['POST'])
+def create_vehiculo():
+    request_body = json.loads(request.data)
+
+    existing_vehiculo = Vehiculos.query.filter_by(name=request_body["name"]).first()
+
+    if existing_vehiculo:
+        return jsonify({"message": "El vehiculo ya existe"}), 404
+
+    new_vehiculo = Vehiculos(
+        name=request_body['name'],
+        model=request_body['model'],
+        vehicle_class=request_body['vehicle_class'],
+        manufacturer=request_body['manufacturer'],
+        cost_in_credits=request_body['cost_in_credits'],
+        length=request_body['length'],
+        crew=request_body['crew'],
+        passengers=request_body['passengers'],
+        max_atmosphering_speed=request_body['max_atmosphering_speed'],
+        cargo_capacity=request_body['cargo_capacity'],
+        consumables=request_body['consumables'],
+        films=request_body['films'],
+        pilots=request_body['pilots']
+        )
+    db.session.add(new_vehiculo)
+    db.session.commit()
+    return jsonify(new_vehiculo.serialize()), 200
 
 
 @app.route('/vehiculo/<int:vehiculo_id>', methods=['GET'])
