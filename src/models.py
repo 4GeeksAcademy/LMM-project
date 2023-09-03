@@ -24,8 +24,8 @@ class Usuario(db.Model):
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(120), unique=True, nullable=False)
-    apellido = db.Column(db.String(120), unique=True, nullable=False)
+    nombre = db.Column(db.String(120), unique=False, nullable=False)
+    apellido = db.Column(db.String(120), unique=False, nullable=False)
     email  = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     usuario_favoritos = relationship('Favorito', backref='usuario', lazy=True)
@@ -50,13 +50,13 @@ class Personajes(db.Model):
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
-    mass = db.Column(db.String(120), unique=True, nullable=False)
-    hair_color = db.Column(db.String(120), unique=True, nullable=False)
-    skin_color = db.Column(db.String(120), unique=True, nullable=False)
-    eye_color = db.Column(db.String(120), unique=True, nullable=False)
-    birth_year = db.Column(db.String(120), unique=True, nullable=False)
-    gender = db.Column(db.String(120), unique=True, nullable=False)
-    height = db.Column(db.String(120), unique=True, nullable=False)
+    mass = db.Column(db.String(120), unique=False, nullable=False)
+    hair_color = db.Column(db.String(120), unique=False, nullable=False)
+    skin_color = db.Column(db.String(120), unique=False, nullable=False)
+    eye_color = db.Column(db.String(120), unique=False, nullable=False)
+    birth_year = db.Column(db.String(120), unique=False, nullable=False)
+    gender = db.Column(db.String(120), unique=False, nullable=False)
+    height = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Personajes %r>' % self.id
@@ -81,14 +81,14 @@ class Planetas(db.Model):
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
-    diameter = db.Column(db.String(120), unique=True, nullable=False)
-    rotation_period = db.Column(db.String(120), unique=True, nullable=False)
-    orbital_period = db.Column(db.String(120), unique=True, nullable=False)
-    gravity = db.Column(db.String(120), unique=True, nullable=False)
-    population = db.Column(db.String(120), unique=True, nullable=False)
-    climate = db.Column(db.String(120), unique=True, nullable=False)
-    terrain = db.Column(db.String(120), unique=True, nullable=False)
-    surface_water = db.Column(db.String(120), unique=True, nullable=False)
+    diameter = db.Column(db.String(120), unique=False, nullable=False)
+    rotation_period = db.Column(db.String(120), unique=False, nullable=False)
+    orbital_period = db.Column(db.String(120), unique=False, nullable=False)
+    gravity = db.Column(db.String(120), unique=False, nullable=False)
+    population = db.Column(db.String(120), unique=False, nullable=False)
+    climate = db.Column(db.String(120), unique=False, nullable=False)
+    terrain = db.Column(db.String(120), unique=False, nullable=False)
+    surface_water = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Planetas %r>' % self.id
@@ -115,17 +115,17 @@ class Vehiculos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     model = db.Column(db.String(120), unique=True, nullable=False)
-    vehicle_class = db.Column(db.String(120), unique=True, nullable=False)
-    manufacturer = db.Column(db.String(120), unique=True, nullable=False)
-    cost_in_credits = db.Column(db.String(120), unique=True, nullable=False)
-    length = db.Column(db.String(120), unique=True, nullable=False)
-    crew = db.Column(db.String(120), unique=True, nullable=False)
-    passengers = db.Column(db.String(120), unique=True, nullable=False)
-    max_atmosphering_speed = db.Column(db.String(120), unique=True, nullable=False)
-    cargo_capacity = db.Column(db.String(120), unique=True, nullable=False)
-    consumables = db.Column(db.String(120), unique=True, nullable=False)
-    films = db.Column(db.String(120), unique=True, nullable=False)
-    pilots = db.Column(db.String(120), unique=True, nullable=False)
+    vehicle_class = db.Column(db.String(120), unique=False, nullable=False)
+    manufacturer = db.Column(db.String(120), unique=False, nullable=False)
+    cost_in_credits = db.Column(db.String(120), unique=False, nullable=False)
+    length = db.Column(db.String(120), unique=False, nullable=False)
+    crew = db.Column(db.String(120), unique=False, nullable=False)
+    passengers = db.Column(db.String(120), unique=False, nullable=False)
+    max_atmosphering_speed = db.Column(db.String(120), unique=False, nullable=False)
+    cargo_capacity = db.Column(db.String(120), unique=False, nullable=False)
+    consumables = db.Column(db.String(120), unique=False, nullable=False)
+    films = db.Column(db.String(120), unique=False, nullable=False)
+    pilots = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Vehiculos %r>' % self.id
