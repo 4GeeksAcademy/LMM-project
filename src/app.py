@@ -65,7 +65,7 @@ def handle_personajes_id(personaje_id):
     onepersonaje = Personajes.query.filter_by(id=personaje_id).first()
 
     if onepersonaje is None:
-        return { 'msj' : 'El personaje no existe, verifica el ID de la URL'}, 404
+        return { 'msj' : 'El personaje no existe'}, 404
 
     return jsonify(onepersonaje.serialize()), 200
 
