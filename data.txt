@@ -1,0 +1,1 @@
+{"useradmin": {"name": "admin", "password": "1234", "isAdmin": true}, "userpepe": {"name": "pepe", "password": "elpepe", "isAdmin": false}, "vehicleSCP-2001": {"plate": "SCP-2001", "userDriving": "none", "reserved": false}, "vehicleFRB-6969": {"plate": "FRB-6969", "userDriving": "none", "reserved": false}}
