@@ -119,9 +119,11 @@ def statVehicle(user):
 def loginSession(isAdmin : bool):
     
     if isAdmin:
-        opcao = input("MODO ADMIN\n\nOperacoes>\n1: Administrar Veiculos\n2: Administrar Motoristas\n3: Administrar Usuarios\n4: Sair\n>: ")
+        opcao = 0
+        
         
         while opcao != "4":
+            opcao = input("MODO ADMIN\n\nOperacoes>\n1: Administrar Veiculos\n2: Administrar Motoristas\n3: Administrar Usuarios\n4: Sair\n>: ")
             match opcao:
                 case "1":
                     vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo\n3: Sair\n>:")
@@ -160,25 +162,30 @@ def loginSession(isAdmin : bool):
                         case "2":
                             curDatabase = readDatabase()
                             databaseKeys = list(curDatabase.keys())
-                            
-                            
-                            invalid = True
-                            while invalid:
-                                placa = input("Digite a placa do veiculo a remover: ")
-                                for i in range(len(curDatabase)):
+                            vehicleQuant = 0
+                            for i in range(len(curDatabase)):
                                     curVehicle = databaseKeys[i]
-                                    
-                                    
                                     if curVehicle[0 : 7] == "vehicle":
+                                        vehicleQuant +=1
+                                 
+                            if vehicleQuant != 0:
+                                invalid = True
+                                while invalid:
+                                    placa = input("Digite a placa do veiculo a remover: ")
+                                    for i in range(len(curDatabase)):
+                                        curVehicle = databaseKeys[i]
                                         
-                                        if curDatabase[curVehicle]['plate'] == placa:
-                                            curDatabase.pop(curVehicle)
-                                            jsonDict = json.dumps(curDatabase)
-                                            with open("/workspaces/LMM-project/data.txt", "w") as file:
-                                                file.write(jsonDict)
-                                            invalid = False
+                                        
+                                        if curVehicle[0 : 7] == "vehicle":
+                                            
+                                            if curDatabase[curVehicle]['plate'] == placa:
+                                                curDatabase.pop(curVehicle)
+                                                jsonDict = json.dumps(curDatabase)
+                                                with open("/workspaces/LMM-project/data.txt", "w") as file:
+                                                    file.write(jsonDict)
+                                                invalid = False
                         case "3":
-                            opcao = "4"
+                            continue
                             
                             
                 case "2":
@@ -222,7 +229,7 @@ def loginSession(isAdmin : bool):
                                                 file.write(jsonDict)
                                             invalid = False
                         case "2":
-                            break
+                            continue
                                             
                 case "3":
                     
@@ -277,7 +284,7 @@ def loginSession(isAdmin : bool):
                                                 file.write(jsonDict)
                                             invalid = False
                         case "3":
-                            opcao = "4"
+                            continue
         
     else:
         curDatabase = readDatabase()
