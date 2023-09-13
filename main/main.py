@@ -17,7 +17,7 @@ def addToDatabase(userName, password, admin):
         file.write(jsonDict)
 
 
-def tikitiki():
+def adminInfoInput():
     cat = input("Is admin? (y/n): ")
 
     if cat == "y":
@@ -27,7 +27,8 @@ def tikitiki():
         catBool = False
         return catBool
     else:
-        tikitiki()
+        print("la opcion no existe\n")
+        adminInfoInput()
     
 
 def readDatabase():
@@ -39,9 +40,10 @@ def readDatabase():
 
 
 
+
 us = input("Enter Username: ")
 pas = input("Enter Password: ")
-opBool = tikitiki()
+opBool = adminInfoInput()
 
 
     
