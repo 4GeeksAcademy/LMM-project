@@ -1,1 +1,1 @@
-{"user1": {"name": "sdfsdf", "password": "dsfsdf", "isAdmin": null}}
+{"user1": {"name": "admin", "password": "1234", "isAdmin": true}}

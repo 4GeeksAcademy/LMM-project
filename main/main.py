@@ -1,8 +1,17 @@
 import json
 
+
+
 def eraseDatabase():
     with open("/workspaces/LMM-project/data.txt", "w") as file:
         file.write("{}")
+
+def readDatabase():
+    with open("/workspaces/LMM-project/data.txt", "r") as file:
+        dataList = file.read()
+        x = json.loads(dataList)
+    print(x)
+    return x
 
 def addToDatabase(userName, password, admin): 
     curDatabase = readDatabase()
@@ -17,6 +26,11 @@ def addToDatabase(userName, password, admin):
         file.write(jsonDict)
 
 
+
+#addToDatabase("admin", "1234", True)
+
+
+
 def adminInfoInput():
     cat = input("Is admin? (y/n): ")
 
@@ -28,24 +42,46 @@ def adminInfoInput():
         return catBool
     else:
         print("la opcion no existe\n")
-        adminInfoInput()
+        return adminInfoInput()
     
 
-def readDatabase():
-    with open("/workspaces/LMM-project/data.txt", "r") as file:
-        dataList = file.read()
-        x = json.loads(dataList)
-    print(x)
-    return x
 
 
 
+def login():
+    curDatabase = readDatabase()
+    databaseKeys = list(curDatabase.keys())
 
-us = input("Enter Username: ")
-pas = input("Enter Password: ")
-opBool = adminInfoInput()
+    us = input("Enter Username: ")
+    print("username is: " + us)
+    for i in range(len(curDatabase)):
+        curUser = databaseKeys[i]
+        print(curUser)
+        print(curUser[:len(curUser)-1])
+        print("user in database: " + curDatabase[curUser]['name'])
+        if curUser[:len(curUser)] == "user":
+            if curDatabase[curUser]['name'] == us:
+                pas = input("Enter Password: ")
+
+                if curDatabase[curUser]['password'] == pas:
+
+                    if curDatabase[curUser]["isAdmin"]:
+                        loginSession(True)
+
+def loginSession(isAdmin : bool):
+    if isAdmin:
+        opcao = input("MODO ADMIN\n\nOperacoes>\n1: Administrar Veiculos\n2: Administrar Motoristas\n3: Administrar Usuarios\n>: ")
+        
+        match opcao:
+            case "1":
+                print("op1 seleccionada")
 
 
+#us = input("Enter Username: ")
+#pas = input("Enter Password: ")
+#opBool = adminInfoInput()
+
+login()
     
 
-addToDatabase(us, pas, opBool)
+#addToDatabase(us, pas, opBool)
