@@ -1,13 +1,49 @@
+import json
 
-def updateDatabase(userName, password):
+def eraseDatabase():
+    with open("/workspaces/LMM-project/data.txt", "w") as file:
+        file.write("{}")
 
-    with open("/workspaces/LMM-project/data.txt", "a") as file:
-        #appendedStr = str("user(", userName, ",", password, ")\n")
-        file.write("user("+ userName + "," + password + ")\n")
+def addToDatabase(userName, password, admin): 
+    curDatabase = readDatabase()
+    
+    userQuant = len(curDatabase)
 
-dataDict = {}
+    with open("/workspaces/LMM-project/data.txt", "w") as file:
+        newUserData = {"name" : userName, "password" : password, "isAdmin" : admin}
+        curDatabase.update({("user" + str(userQuant+1)): newUserData})
+        #userDict = {"name" : userName, "password" : password}
+        jsonDict = json.dumps(curDatabase)
+        file.write(jsonDict)
+
+
+def tikitiki():
+    cat = input("Is admin? (y/n): ")
+
+    if cat == "y":
+        catBool = True
+        return catBool
+    elif cat == "n":
+        catBool = False
+        return catBool
+    else:
+        tikitiki()
+    
+
+def readDatabase():
+    with open("/workspaces/LMM-project/data.txt", "r") as file:
+        dataList = file.read()
+        x = json.loads(dataList)
+    print(x)
+    return x
+
+
 
 us = input("Enter Username: ")
 pas = input("Enter Password: ")
+opBool = tikitiki()
 
-updateDatabase(us, pas)
+
+    
+
+addToDatabase(us, pas, opBool)
