@@ -13,11 +13,14 @@ def readDatabase():
     print(x)
     return x
 
-def addToDatabase(userName, password, admin): 
+def addUserToDatabase(userName, password, admin): 
     curDatabase = readDatabase()
+    databaseKeys = list(curDatabase.keys())
+    userQuant = 0
+    for i in range(len(databaseKeys)):
+        if databaseKeys[i][:len(databaseKeys[i])-1] == "user":
+            userQuant += 1
     
-    userQuant = len(curDatabase)
-
     with open("/workspaces/LMM-project/data.txt", "w") as file:
         newUserData = {"name" : userName, "password" : password, "isAdmin" : admin}
         curDatabase.update({("user" + str(userQuant+1)): newUserData})
@@ -25,6 +28,20 @@ def addToDatabase(userName, password, admin):
         jsonDict = json.dumps(curDatabase)
         file.write(jsonDict)
 
+def addVehicleToDatabase(placa, usadoPor, reservado): 
+    curDatabase = readDatabase()
+    databaseKeys = list(curDatabase.keys())
+    vehicleQuant = 0
+    for i in range(len(databaseKeys)):
+        if databaseKeys[i][:len(databaseKeys[i])-1] == "vehicle":
+            vehicleQuant += 1
+
+    with open("/workspaces/LMM-project/data.txt", "w") as file:
+        newUserData = {"plate" : placa, "userDriving" : usadoPor, "reserved" : reservado}
+        curDatabase.update({("vehicle" + str(vehicleQuant+1)): newUserData})
+        #userDict = {"name" : userName, "password" : password}
+        jsonDict = json.dumps(curDatabase)
+        file.write(jsonDict)
 
 
 #addToDatabase("admin", "1234", True)
@@ -68,6 +85,8 @@ def login():
 
                     if curDatabase[curUser]["isAdmin"]:
                         loginSession(True)
+                    else:
+                        loginSession(False)
 
 def loginSession(isAdmin : bool):
     if isAdmin:
@@ -75,7 +94,17 @@ def loginSession(isAdmin : bool):
         
         match opcao:
             case "1":
-                print("op1 seleccionada")
+                vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo")
+                match vehicleOption:
+                    case "1":
+                        plate = input("Digite a placa: ")
+                        owner = input("Digite o nome de usuario do dono: ")
+                        res = input("Esta reservado? (s/n): ")
+                        if res == "s":
+                            addVehicleToDatabase(plate, owner, True)
+                        else:
+                            addVehicleToDatabase(plate, owner, False)
+                        
 
 
 #us = input("Enter Username: ")
