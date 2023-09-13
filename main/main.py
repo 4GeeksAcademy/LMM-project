@@ -10,7 +10,7 @@ def readDatabase(): #Devuelve el diccionario de Data.txt
     with open("/workspaces/LMM-project/data.txt", "r") as file:
         dataList = file.read()
         x = json.loads(dataList)
-    print(x)
+    #print(x)
     return x
 
 def addUserToDatabase(userName, password, admin): #Añade nuevo usuario al data (Puede repetir)
@@ -23,7 +23,7 @@ def addUserToDatabase(userName, password, admin): #Añade nuevo usuario al data 
     
     with open("/workspaces/LMM-project/data.txt", "w") as file:
         newUserData = {"name" : userName, "password" : password, "isAdmin" : admin}
-        curDatabase.update({("user" + str(userQuant+1)): newUserData})
+        curDatabase.update({("user" + userName): newUserData})
         #userDict = {"name" : userName, "password" : password}
         jsonDict = json.dumps(curDatabase)
         file.write(jsonDict)
@@ -49,18 +49,18 @@ def addVehicleToDatabase(placa, usadoPor, reservado): #Añade nuevo vehiculo
 
 
 
-def adminInfoInput():
-    cat = input("Is admin? (y/n): ")
+# def adminInfoInput():
+#     cat = input("Is admin? (y/n): ")
 
-    if cat == "y":
-        catBool = True
-        return catBool
-    elif cat == "n":
-        catBool = False
-        return catBool
-    else:
-        print("la opcion no existe\n")
-        return adminInfoInput()
+#     if cat == "y":
+#         catBool = True
+#         return catBool
+#     elif cat == "n":
+#         catBool = False
+#         return catBool
+#     else:
+#         print("la opcion no existe\n")
+#         return adminInfoInput()
     
 
 
@@ -73,16 +73,16 @@ def login():
     us = input("Enter Username: ")
     global logdUserName
     
-    print("username is: " + us)
+    #print("username is: " + us)
     for i in range(len(curDatabase)):
         curUser = databaseKeys[i]
         #print(curUser)
         #print(curUser[:len(curUser)-1])
         #print("user in database: " + curDatabase[curUser]['name'])
-        if curUser[:len(curUser)-1] == "user":
+        if curUser[0 : 4] == "user":
             
             logdUserName = us
-            print("reconocio palabra clave user")
+            #print("reconocio palabra clave user")
             if curDatabase[curUser]['name'] == us:
                 pas = input("Enter Password: ")
 
@@ -114,173 +114,211 @@ def statVehicle(user):
                 with open("/workspaces/LMM-project/data.txt", "w") as file:
                     databasejson = json.dumps(curDatabase)
                     file.write(databasejson)
+                break
 
 def loginSession(isAdmin : bool):
     
     if isAdmin:
-        opcao = input("MODO ADMIN\n\nOperacoes>\n1: Administrar Veiculos\n2: Administrar Motoristas\n3: Administrar Usuarios\n>: ")
+        opcao = input("MODO ADMIN\n\nOperacoes>\n1: Administrar Veiculos\n2: Administrar Motoristas\n3: Administrar Usuarios\n4: Sair\n>: ")
         
-        match opcao:
-            case "1":
-                vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo\n>:")
-                match vehicleOption:
-                    
-                    case "1":
-                        curDatabase = readDatabase()
-                        databaseKeys = list(curDatabase.keys())
+        while opcao != "4":
+            match opcao:
+                case "1":
+                    vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo\n3: Sair\n>:")
+                    match vehicleOption:
                         
-                        plate = input("Digite a placa: ")
-                        driving = input("Esta sendo utilizado? (s/n): ")
-                        if driving == "s":
+                        case "1":
+                            curDatabase = readDatabase()
+                            databaseKeys = list(curDatabase.keys())
+                            
+                            plate = input("Digite a placa: ")
+                            driving = input("Esta sendo utilizado? (s/n): ")
+                            if driving == "s":
+                                
+                                invalid = True
+                                while invalid:
+                                    driver = input("Digite o nome de usuario que esta utilizando: ")
+                                    
+                                    for i in range(len(curDatabase)):
+                                        curUser = databaseKeys[i]
+                                        
+                                        if curUser[0 : 4] == "user":
+                                            
+                                            if curDatabase[curUser]['name'] == driver:
+                                                invalid = False
+                            elif driving == "n":
+                                driver = "none"
+                                        
+                                
+                            res = input("Esta reservado? (s/n): ")
+                            if res == "s":
+                                addVehicleToDatabase(plate, driver, True)
+                            else:
+                                addVehicleToDatabase(plate, driver, False)
+                                
+                            
+                        case "2":
+                            curDatabase = readDatabase()
+                            databaseKeys = list(curDatabase.keys())
+                            
                             
                             invalid = True
                             while invalid:
-                                driver = input("Digite o nome de usuario que esta utilizando: ")
+                                placa = input("Digite a placa do veiculo a remover: ")
+                                for i in range(len(curDatabase)):
+                                    curVehicle = databaseKeys[i]
+                                    
+                                    
+                                    if curVehicle[0 : 7] == "vehicle":
+                                        
+                                        if curDatabase[curVehicle]['plate'] == placa:
+                                            curDatabase.pop(curVehicle)
+                                            jsonDict = json.dumps(curDatabase)
+                                            with open("/workspaces/LMM-project/data.txt", "w") as file:
+                                                file.write(jsonDict)
+                                            invalid = False
+                        case "3":
+                            opcao = "4"
+                            
+                            
+                case "2":
+                    
+                    motorOption = input("ADMINISTRACAO DE MOTORISTAS\nOperacoes>\n1: Atualizar uso\n2: Sair\n>:")
+                    match motorOption:
+                        case "1":
+                            
+                            curDatabase = readDatabase()
+                            databaseKeys = list(curDatabase.keys())
+                            
+                            
+                            invalid = True
+                            while invalid:
+                                plate = input("Digite a placa: ")
+                                
+                                invalid2 = True
+                                for i in range(len(curDatabase)):
+                                    curVehicle = databaseKeys[i]
+                                    
+                                    if curVehicle[0 : 7] == "vehicle":
+                                        
+                                        while invalid2:
+                                            driver = input("Digite o nome de usuario do motorista ('none' se nao tem): ")
+                                            for j in range(len(curDatabase)):
+                                                curUser = databaseKeys[j]
+                                        
+                                                if curUser[0 : 4] == "user":
+                                            
+                                                    if (curDatabase[curUser]['name'] == driver) or (driver == 'none'):
+                                                        invalid2 = False
+
+                                        if curDatabase[curVehicle]['plate'] == plate:
+                                            curDatabase[curVehicle]['userDriving'] = driver
+                                            if driver == 'none':
+                                                curDatabase[curVehicle]['reserved'] = False
+                                            else:
+                                                curDatabase[curVehicle]['reserved'] = True
+                                            jsonDict = json.dumps(curDatabase)
+                                            with open("/workspaces/LMM-project/data.txt", "w") as file:
+                                                file.write(jsonDict)
+                                            invalid = False
+                        case "2":
+                            break
+                                            
+                case "3":
+                    
+                    userOption = input("ADMINISTRACAO DE USUARIOS\nOperacoes>\n1: Adicionar usuario\n2: Eliminar usuario\n3:Sair\n>:")
+                    
+                    match userOption:
+                        case "1": 
+                            
+                            curDatabase = readDatabase()
+                            databaseKeys = list(curDatabase.keys())
+                            
+                            invalid = True
+                            while invalid:
+                                nomeUsuario = input("Digite o nome do usuario: ")
                                 
                                 for i in range(len(curDatabase)):
                                     curUser = databaseKeys[i]
                                     
                                     if curUser[0 : 4] == "user":
                                         
-                                        if curDatabase[curUser]['name'] == driver:
+                                        if curDatabase[curUser]['name'] != nomeUsuario:
                                             invalid = False
-                        elif driving == "n":
-                            driver = "none"
-                                    
+                                            
+                            senhaUsuario = input("Digite a senha do usuario: ")
                             
-                        res = input("Esta reservado? (s/n): ")
-                        if res == "s":
-                            addVehicleToDatabase(plate, driver, True)
-                        else:
-                            addVehicleToDatabase(plate, driver, False)
+                            admin = input("O usuario é administrador?: s/n")
                             
+                            if admin == "s":
+                                addUserToDatabase(nomeUsuario, senhaUsuario, True)
+                            else:
+                                addUserToDatabase(nomeUsuario, senhaUsuario, False)
                         
-                    case "2":
-                        curDatabase = readDatabase()
-                        databaseKeys = list(curDatabase.keys())
-                        
-                        
-                        invalid = True
-                        while invalid:
-                            placa = input("Digite a placa do veiculo a remover: ")
-                            for i in range(len(curDatabase)):
-                                curVehicle = databaseKeys[i]
-                                
-                                
-                                if curVehicle[0 : 7] == "vehicle":
-                                    
-                                    if curDatabase[curVehicle]['plate'] == placa:
-                                        curDatabase.pop(curVehicle)
-                                        jsonDict = json.dumps(curDatabase)
-                                        with open("/workspaces/LMM-project/data.txt", "w") as file:
-                                            file.write(jsonDict)
-                                        invalid = False
-                        
-                        
-                        
-            case "2":
-                
-                motorOption = input("ADMINISTRACAO DE MOTORISTAS\nOperacoes>\n1: Atualizar uso")
-                match motorOption:
-                    case "1":
-                        
-                        curDatabase = readDatabase()
-                        databaseKeys = list(curDatabase.keys())
-                        
-                        plate = input("Digite a placa: ")
-                        invalid = True
-                        while invalid:
-                            driver = input("Digite o nome de usuario do dono: ")
+                        case "2":
                             
-                            for i in range(len(curDatabase)):
-                                curUser = databaseKeys[i]
+                            curDatabase = readDatabase()
+                            databaseKeys = list(curDatabase.keys())
+                            
+                            invalid = True
+                            while invalid:
+                                nome = input("Digite o nome do usuario a remover: ")
                                 
-                                if curUser[:len(curUser)-1] == "user":
+                                for i in range(len(curDatabase)):
+                                    curUsuario = databaseKeys[i]
                                     
-                                    if curDatabase[curUser]['name'] == driver:
-                                        invalid = False
+                                    
+                                    if curUsuario[0 : 4] == "user":
                                         
-            case "3":
-                
-                userOption = input("ADMINISTRACAO DE USUARIOS\nOperacoes>\n1: Adicionar usuario\n2: Eliminar usuario\n3:Sair\n")
-                
-                match userOption:
-                    case "1": 
-                        
-                        curDatabase = readDatabase()
-                        databaseKeys = list(curDatabase.keys())
-                        
-                        invalid = True
-                        while invalid:
-                            nomeUsuario = input("Digite o nome do usuario: ")
-                            
-                            for i in range(len(curDatabase)):
-                                curUser = databaseKeys[i]
-                                
-                                if curUser[:len(curUser)-1] == "user":
-                                    
-                                    if curDatabase[curUser]['name'] != nomeUsuario:
-                                        invalid = False
-                                        
-                        senhaUsuario = input("Digite a senha do usuario: ")
-                        
-                        admin = input("O usuario é administrador?: s/n")
-                        
-                        if admin == "s":
-                            addUserToDatabase(nomeUsuario, senhaUsuario, True)
-                        else:
-                            addUserToDatabase(nomeUsuario, senhaUsuario, False)
-                    
-                    case "2":
-                        
-                        curDatabase = readDatabase()
-                        databaseKeys = list(curDatabase.keys())
-                        
-                        invalid = True
-                        while invalid:
-                            nome = input("Digite o nome do usuario a remover: ")
-                            
-                            for i in range(len(curDatabase)):
-                                curUsuario = databaseKeys[i]
-                                
-                                
-                                if curUsuario[0 : 4] == "user":
-                                    
-                                    if curDatabase[curUsuario]['name'] == nome:
-                                        curDatabase.pop(curUsuario)
-                                        jsonDict = json.dumps(curUsuario)
-                                        with open("/workspaces/LMM-project/data.txt", "w") as file:
-                                            file.write(jsonDict)
-                                        invalid = False
-    
+                                        if curDatabase[curUsuario]['name'] == nome:
+                                            curDatabase.pop(curUsuario)
+                                            jsonDict = json.dumps(curUsuario)
+                                            with open("/workspaces/LMM-project/data.txt", "w") as file:
+                                                file.write(jsonDict)
+                                            invalid = False
+                        case "3":
+                            opcao = "4"
+        
     else:
         curDatabase = readDatabase()
         databaseKeys = list(curDatabase.keys())
         
         for i in range(len(curDatabase)):
+            curVehicle = databaseKeys[i]
             
-                for i in range(len(curDatabase)):
-                    curVehicle = databaseKeys[i]
-                    
-                    if curVehicle[0 : 7] == "vehicle":
-                        
-                        if curDatabase[curVehicle]['userDriving'] == logdUserName:
-                            
-                            pass  
-                        elif curDatabase[curVehicle]['userDriving'] == "none":
-                            opcao = input("MODO USUARIO\n\nOperacoes>\n1: Reservar veículo.\n2: Sair\n\n")
+            if curVehicle[0 : 7] == "vehicle":
+                
+                if curDatabase[curVehicle]['userDriving'] == logdUserName:
+                    opcao = input("Voce ja tem um veiculo reservado, deseja deixar usa-lo?(s/n)")
+                    if opcao == "s":
+                        curDatabase[curVehicle]['userDriving'] = "none"
+                        curDatabase[curVehicle]['reserved'] = False
+                        jsonDict = json.dumps(curDatabase)
+                        with open("/workspaces/LMM-project/data.txt", "w") as file:
+                            file.write(jsonDict)
 
-                            match opcao:
-                                case "1":
-                                    
-                                    statVehicle(logdUserName)
+                elif curDatabase[curVehicle]['userDriving'] == "none":
+                    opcao = input("MODO USUARIO\n\nOperacoes>\n1: Reservar veículo.\n2: Sair\n\n")
+
+                    match opcao:
+                        case "1":
+                            
+                            statVehicle(logdUserName)
 
 
 #us = input("Enter Username: ")
 #pas = input("Enter Password: ")
 #opBool = adminInfoInput()
-
-login()
-    
+running = True
+while running:
+    option = input("Fazer login? (s/n): ")
+    if option == "s":
+        login()
+    else:
+        option = input("Sair? (s/n): ")
+        if option == "s":
+            running = False
+        else:
+            running = True
 
 #addToDatabase(us, pas, opBool)
