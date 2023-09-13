@@ -1,1 +1,1 @@
-{"user1": {"name": "admin", "password": "1234", "isAdmin": true}}
+{"user1": {"name": "admin", "password": "1234", "isAdmin": true}, "vehicle1": {"plate": "ABC-1234", "userDriving": "admin", "reserved": false}, "vehicle2": {"plate": "BCD-2345", "userDriving": "admin", "reserved": true}}
