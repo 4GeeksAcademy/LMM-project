@@ -88,6 +88,25 @@ def login():
                         loginSession(True)
                     else:
                         loginSession(False)
+    
+    global logdUserName
+    logdUserName = us
+
+def statVehicle(user):
+    curDatabase = readDatabase()
+    databaseKeys = list(curDatabase.keys())
+    
+    for i in range(len(curDatabase)):
+        
+            for i in range(len(curDatabase)):
+                curVehicle = databaseKeys[i]
+                
+                if curVehicle[0 : 7] == "vehicle":
+                    
+                    if curDatabase[curVehicle]['reserved'] == False:
+                        
+                        curDatabase[curVehicle]['reserved'] = True
+                        curDatabase[curVehicle]['userDriving'] = user
 
 def loginSession(isAdmin : bool):
     
@@ -172,7 +191,13 @@ def loginSession(isAdmin : bool):
                                     
                                     if curDatabase[curUser]['name'] == driver:
                                         invalid = False
-                        
+    else:
+        opcao = input("MODO USUARIO\n\nOperacoes>\n1: Reservar veículo.\n2: Sair\n\n")
+
+        match opcao:
+            case "1":
+                
+                statVehicle(logdUserName)                    
 
 
 #us = input("Enter Username: ")
