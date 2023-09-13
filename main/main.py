@@ -59,7 +59,8 @@ def login():
         print(curUser)
         print(curUser[:len(curUser)-1])
         print("user in database: " + curDatabase[curUser]['name'])
-        if curUser[:len(curUser)] == "user":
+        if curUser[:len(curUser)-1] == "user":
+            print("reconocio palabra clave user")
             if curDatabase[curUser]['name'] == us:
                 pas = input("Enter Password: ")
 
