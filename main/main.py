@@ -28,6 +28,7 @@ def addUserToDatabase(userName, password, admin): #Añade nuevo usuario al data 
         jsonDict = json.dumps(curDatabase)
         file.write(jsonDict)
 
+
 def addVehicleToDatabase(placa, usadoPor, reservado): #Añade nuevo vehiculo
     curDatabase = readDatabase()
     databaseKeys = list(curDatabase.keys())
@@ -38,7 +39,7 @@ def addVehicleToDatabase(placa, usadoPor, reservado): #Añade nuevo vehiculo
 
     with open("/workspaces/LMM-project/data.txt", "w") as file:
         newUserData = {"plate" : placa, "userDriving" : usadoPor, "reserved" : reservado}
-        curDatabase.update({("vehicle" + str(vehicleQuant+1)): newUserData})
+        curDatabase.update({("vehicle" + placa): newUserData})
         #userDict = {"name" : userName, "password" : password}
         jsonDict = json.dumps(curDatabase)
         file.write(jsonDict)
@@ -95,7 +96,7 @@ def loginSession(isAdmin : bool):
         
         match opcao:
             case "1":
-                vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo")
+                vehicleOption = input("ADMINISTRACAO DE VEICULOS\nOperacoes>\n1: Adicionar Veiculo\n2: Remover Veiculo\n>:")
                 match vehicleOption:
                     
                     case "1":
@@ -117,6 +118,8 @@ def loginSession(isAdmin : bool):
                                         
                                         if curDatabase[curUser]['name'] == driver:
                                             invalid = False
+                        elif driving == "n":
+                            driver = "none"
                                     
                             
                         res = input("Esta reservado? (s/n): ")
@@ -126,7 +129,27 @@ def loginSession(isAdmin : bool):
                             addVehicleToDatabase(plate, driver, False)
                             
                         
-                        case "2":
+                    case "2":
+                        curDatabase = readDatabase()
+                        databaseKeys = list(curDatabase.keys())
+                        
+                        
+                        invalid = True
+                        while invalid:
+                            placa = input("Digite a placa do veiculo a remover: ")
+                            for i in range(len(curDatabase)):
+                                curVehicle = databaseKeys[i]
+                                
+                                
+                                if curVehicle[0 : 7] == "vehicle":
+                                    
+                                    if curDatabase[curVehicle]['plate'] == placa:
+                                        curDatabase.pop(curVehicle)
+                                        jsonDict = json.dumps(curDatabase)
+                                        with open("/workspaces/LMM-project/data.txt", "w") as file:
+                                            file.write(jsonDict)
+                                        invalid = False
+                        
                         
                         
             case "2":
